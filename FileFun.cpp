@@ -20,9 +20,13 @@ int main()
 	//zapis_txt(&txt);
 
 	//cout << *odczyt_txt("tmp.txt");
-	unique_ptr<string> data = odczyt_txt("tmp.txt");
-	for (auto& c : *data) c = toupper((unsigned char) c);
-	zapis_txt(data.get(), "wielkie_litery.txt");
+	//unique_ptr<string> data = odczyt_txt("tmp.txt");
+	//for (auto& c : *data) c = toupper((unsigned char) c);
+	//zapis_txt(data.get(), "wielkie_litery.txt");
 	//cout << *data;
+
+	zapis_bin(&txt,"");
+	unique_ptr<string> data = odczyt_bin("");
+	cout << *data;
 }
 
