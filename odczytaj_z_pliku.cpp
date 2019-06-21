@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>				//function getline
+#include <sstream>
 
 using namespace std;
 
@@ -59,5 +60,33 @@ unique_ptr<string> odczyt_bin(const char* nazwa_pliku)
 	{
 		cout << "Nie mo¿na otworzyæ pliku " << nazwa_pliku << " do czytania";
 		return nullptr;
+	}
+}
+
+bool szukacz(istringstream &str, string etykieta, double &zmienna)
+{
+	string tr = str.str();
+	size_t nr = tr.find(etykieta);
+
+	if (nr == string::npos)
+	{
+		cout << "Blad wyszukiwania etykiety " << etykieta << endl;
+		return false;
+	}
+
+	str.seekg(nr + etykieta.length());
+	
+	double wartosc;
+	str >> wartosc;
+
+	if (!str)
+	{
+		cout << "Blad wczytywania wartosci po etykiecie: " << etykieta << endl;
+		return false;
+	}
+	else
+	{
+		zmienna = wartosc;
+		return true;
 	}
 }
