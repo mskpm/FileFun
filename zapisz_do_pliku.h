@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <sstream>
 
-void zapis_txt(std::string *, const char*);
-void zapis_bin(std::string *, const char*);
+bool zapis_all_txt(std::string *, const char*);
+bool zapis_all_bin(std::string *, const char*);
+bool zapis_1_param_txt(std::istringstream &, const char*);

@@ -1,5 +1,4 @@
-﻿// FileFun.cpp : Ten plik zawiera funkcję „main”. W nim rozpoczyna się i kończy wykonywanie programu.
-//
+﻿#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -21,8 +20,9 @@ int main()
 	istringstream nastawy(
 				R"(nastawa1 3
 				wzmocnienie 3 5 7
-				wspolczynnik_kalibracji 9.5)"
+				wspolczynnik_kalibracji 9.5 10.1)"
 	);
+
 
 	//cout << txt;
 	//zapis_txt(&txt);
@@ -37,30 +37,8 @@ int main()
 	//unique_ptr<string> data = odczyt_bin("");
 	//cout << *data;
 
-	double var;
-	string etykieta{"wzmocnienie"};
-	vector<double> wartosci;
-
-	if (szukacz(nastawy, etykieta, var))
-	{
-		cout << "znaleziono " << etykieta << ": " << var << " ";
-		wartosci.push_back(var);
-
-		while (nastawy >> var)
-		{
-			wartosci.push_back(var);
-		}
-	}
-	if (wartosci.size() > 1)
-	{
-	for (int i=1; i < wartosci.size();i++)
-		cout << wartosci[i] << " ";
-	}
+	zapis_1_param_txt(nastawy,"wzmocnienie");
 	
-	if (nastawy.fail())
-		nastawy.clear(nastawy.rdstate() & ~ios::failbit);
-	if(nastawy.eof())
-		nastawy.clear(nastawy.rdstate() & ~ios::failbit);
 
 }
 
