@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>				//function getline
 #include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -31,62 +32,39 @@ unique_ptr<string> odczyt_txt(const char* nazwa_pliku)
 	}
 }
 
-unique_ptr<string> odczyt_bin(const char* nazwa_pliku)
+//********************************************************************
+
+vector<double> odczyt_bin(const char* nazwa_pliku, string etykieta)
 {
 	if (nazwa_pliku == "")
 	{
 		nazwa_pliku = "tmp.bin";
 	}
 
+	vector<double> wartosci;
+	double tmp = 0;
+	
 	if (fstream z_pliku{ nazwa_pliku, ios::in | ios::binary })
 	{
-		int dlugosc_txt;
-		string txt{};
-		z_pliku.read((char*)&dlugosc_txt, sizeof(int));
-
-		char* tab = new char[dlugosc_txt + 1]{};
-		z_pliku.read(tab, dlugosc_txt);
-		txt = tab;
-		delete [] tab;
-		if (!z_pliku)
+		while (z_pliku)
 		{
-			cout << "Blad czytania tekstu z pliku " << nazwa_pliku;
+			z_pliku.read((char*)& tmp, sizeof(double));
+			wartosci.push_back(tmp);
 		}
+	
 
 		z_pliku.close();
-		return make_unique<string>(txt);
+		/*cout << wartosci[0] << endl;
+		cout << wartosci[1] << endl;
+		cout << wartosci[2] << endl;*/
+		
+		return wartosci;
 	}
 	else
 	{
 		cout << "Nie mo¿na otworzyæ pliku " << nazwa_pliku << " do czytania";
-		return nullptr;
+		exit(-1);
 	}
 }
 
-bool szukacz(istringstream &str, string etykieta, double &zmienna)
-{
-	string tr = str.str();
-	size_t nr = tr.find(etykieta);
-
-	if (nr == string::npos)
-	{
-		cout << "Blad wyszukiwania etykiety " << etykieta << endl;
-		return false;
-	}
-
-	str.seekg(nr + etykieta.length());
-	
-	double wartosc;
-	str >> wartosc;
-
-	if (!str)
-	{
-		cout << "Blad wczytywania wartosci po etykiecie: " << etykieta << endl;
-		return false;
-	}
-	else
-	{
-		zmienna = wartosc;
-		return true;
-	}
-}
+//********************************************************************

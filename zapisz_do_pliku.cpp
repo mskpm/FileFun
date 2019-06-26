@@ -5,15 +5,15 @@
 #include <vector>
 #include <sstream>
 
-#include "odczytaj_z_pliku.h"
+#include "szukacz.h"
 
 
 using namespace std;
 
 
-bool zapis_all_txt(string* tekst, const char* nazwa_pliku)
+bool zapis_all_txt(string* tekst, string nazwa_pliku)
 {
-	if (nazwa_pliku=="")
+	if (nazwa_pliku.size()==0)
 	{
 		nazwa_pliku = "tmp.txt";
 	}
@@ -34,13 +34,10 @@ bool zapis_all_txt(string* tekst, const char* nazwa_pliku)
 }
 
 //********************************************************************
-
-bool zapis_1_param_txt(istringstream &source, const char* wzor)
+bool zapis_1_param_txt(istringstream &source, string etykieta)
 {
+	string nazwa_pliku{etykieta+".txt"};
 	double var;
-	string etykieta{ wzor };
-	string nazwa_pliku{wzor};
-	nazwa_pliku.append(".txt");
 	vector<double> wartosci;
 	ostringstream dane{};
 
@@ -55,7 +52,7 @@ bool zapis_1_param_txt(istringstream &source, const char* wzor)
 	}
 	else
 	{
-		cout << "Nie znaleziono: " << etykieta << endl;
+		cout << "nie znaleziono: " << etykieta << endl;
 		if (source.fail())
 			source.clear(source.rdstate() & ~ios::failbit);
 		if (source.eof())
@@ -63,15 +60,15 @@ bool zapis_1_param_txt(istringstream &source, const char* wzor)
 
 		return false;
 	}
-
 	dane << etykieta << " ";
+
 	for (size_t i = 0; i < wartosci.size(); i++)
 	{
 		dane << wartosci[i] << " ";
 	}
 
 	string dane_s = dane.str();
-	zapis_all_txt(&dane_s, nazwa_pliku.c_str());
+	zapis_all_txt(&dane_s, nazwa_pliku);
 
 
 	if (source.fail())
@@ -81,9 +78,10 @@ bool zapis_1_param_txt(istringstream &source, const char* wzor)
 	return true;
 }
 //********************************************************************
-bool zapis_all_bin(string* tekst, const char* nazwa_pliku)
+
+bool zapis_all_bin(string* tekst, string nazwa_pliku)
 {
-	if (nazwa_pliku=="")
+	if (nazwa_pliku.size()==0)
 	{
 		nazwa_pliku = "tmp.bin";
 	}
@@ -109,5 +107,67 @@ bool zapis_all_bin(string* tekst, const char* nazwa_pliku)
 	}
 }
 
+//********************************************************************
 
+bool zapis_1_param_bin(istringstream& source, string etykieta)
+{
+	string nazwa_pliku{ etykieta + ".bin" };
+	double var;
+	vector<double> wartosci;
+
+	ostringstream dane{};
+
+	if (szukacz(source, etykieta, var))
+	{
+		wartosci.push_back(var);
+
+		while (source >> var)
+		{
+			wartosci.push_back(var);
+		}
+	}
+	else
+	{
+		cout << "Nie znaleziono: " << etykieta << endl;
+		if (source.fail())
+			source.clear(source.rdstate() & ~ios::failbit);
+		if (source.eof())
+			source.clear(source.rdstate() & ~ios::failbit);
+
+		return false;
+	}
+
+	/*dane << etykieta << " ";
+	for (size_t i = 0; i < wartosci.size(); i++)
+	{
+		dane << wartosci[i] << " ";
+	}
+
+	string dane_s = dane.str();*/
+
+	//zapis_all_bin(&dane_s, nazwa_pliku);
+	
+	ofstream do_pliku_bin(nazwa_pliku.c_str(), ios::out | ios::binary);
+	
+	if (!do_pliku_bin)
+		cout << "Nie mo¿na otwo¿yæ pliku" + nazwa_pliku + " do zapisu ";
+	else
+	{
+		//do_pliku_bin.write((char*) &etykieta, sizeof(etykieta));
+		for(auto dane:wartosci)
+		{
+			do_pliku_bin.write((char*)& dane, sizeof(dane));
+		}
+
+	}
+
+	do_pliku_bin.close();
+
+	if (source.fail())
+		source.clear(source.rdstate() & ~ios::failbit);
+	if (source.eof())
+		source.clear(source.rdstate() & ~ios::failbit);
+	return true;
+}
+//********************************************************************
 

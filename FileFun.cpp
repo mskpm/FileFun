@@ -8,6 +8,7 @@
 
 #include "zapisz_do_pliku.h"
 #include "odczytaj_z_pliku.h"
+#include "szukacz.h"
 
 using namespace std;
 
@@ -20,7 +21,7 @@ int main()
 	istringstream nastawy(
 				R"(nastawa1 3
 				wzmocnienie 3 5 7
-				wspolczynnik_kalibracji 9.5 10.1)"
+				wspolczynnik_kalibracji 9.5 1 5.6)"
 	);
 
 
@@ -37,8 +38,17 @@ int main()
 	//unique_ptr<string> data = odczyt_bin("");
 	//cout << *data;
 
-	zapis_1_param_txt(nastawy,"wzmocnienie");
+	//zapis_1_param_txt(nastawy,"wzmocnienie");
+	string do_zapisu{"wspolczynnik_kalibracji"};
+	zapis_1_param_bin(nastawy, do_zapisu);
+	vector<double> data = odczyt_bin("wspolczynnik_kalibracji.bin",do_zapisu);
+	double a, b, c;
 	
-
+	a = data[0];
+	b = data[1];
+	c = data[2];
+	cout << do_zapisu << ": "<< a << endl;
+	cout << do_zapisu << ": "<< b << endl;
+	cout << do_zapisu << ": "<< c << endl;
 }
 
